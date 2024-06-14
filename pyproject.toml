@@ -19,6 +19,11 @@ python = "^3.8"
 ezmsg = "^3.3.0"
 websockets = "^8.1"
 
+[tool.poetry.group.test.dependencies]
+pytest = "^7.0.0"
+pytest-cov = "*"
+flake8 = "*"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
