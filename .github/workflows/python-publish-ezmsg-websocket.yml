@@ -33,9 +33,9 @@ jobs:
           pip install build
 
       - name: Build ezmsg-websocket
-        run: python -m build extensions/ezmsg-websocket
+        run: python -m build .
       - name: Publish ezmsg-websocket
         uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
         with:
           password: ${{ secrets.PYPI_API_TOKEN_WEBSOCKET }}
-          packages_dir: extensions/ezmsg-websocket/dist
+          packages_dir: dist
