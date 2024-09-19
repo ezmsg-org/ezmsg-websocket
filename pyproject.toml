@@ -16,7 +16,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ezmsg = "^3.3.0"
+ezmsg = "^3.5.0"
 websockets = "^8.1"
 
 [tool.poetry.group.test.dependencies]
