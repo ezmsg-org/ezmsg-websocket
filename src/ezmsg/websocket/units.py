@@ -34,8 +34,8 @@ class WebsocketServer(ez.Unit):
     and injects it into system in a DataArray
     """
 
-    SETTINGS: WebsocketSettings
-    STATE: WebsocketState
+    SETTINGS = WebsocketSettings
+    STATE = WebsocketState
 
     INPUT = ez.InputStream(bytes)
     OUTPUT = ez.OutputStream(bytes)
@@ -99,8 +99,8 @@ class WebsocketServer(ez.Unit):
 
 
 class WebsocketClient(ez.Unit):
-    SETTINGS: WebsocketSettings
-    STATE: WebsocketState
+    SETTINGS = WebsocketSettings
+    STATE = WebsocketState
 
     INPUT = ez.InputStream(bytes)
     OUTPUT = ez.OutputStream(bytes)

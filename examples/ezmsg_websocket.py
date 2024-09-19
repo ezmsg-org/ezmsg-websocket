@@ -17,7 +17,7 @@ class LFOSettings(ez.Settings):
 
 
 class LFO(ez.Unit):
-    SETTINGS: LFOSettings
+    SETTINGS = LFOSettings
 
     OUTPUT = ez.OutputStream(float)
 
@@ -64,7 +64,7 @@ class WebsocketSystemSettings(ez.Settings):
 
 
 class WebsocketSystem(ez.Collection):
-    SETTINGS: WebsocketSystemSettings
+    SETTINGS = WebsocketSystemSettings
 
     OSC = LFO()
     SERVER = WebsocketServer()
