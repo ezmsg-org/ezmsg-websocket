@@ -1,15 +1,12 @@
 import asyncio
 import ssl
-
 from dataclasses import field
-
-import websockets.server
-import websockets.exceptions
-from websockets.legacy.client import connect, WebSocketClientProtocol
+from typing import AsyncGenerator, Optional, Union
 
 import ezmsg.core as ez
-
-from typing import Optional, Union, AsyncGenerator
+import websockets.exceptions
+import websockets.server
+from websockets.legacy.client import WebSocketClientProtocol, connect
 
 
 class WebsocketSettings(ez.Settings):
@@ -19,16 +16,11 @@ class WebsocketSettings(ez.Settings):
 
 
 class WebsocketState(ez.State):
-    incoming_queue: "asyncio.Queue[Union[str,bytes]]" = field(
-        default_factory=asyncio.Queue
-    )
-    outgoing_queue: "asyncio.Queue[Union[str,bytes]]" = field(
-        default_factory=asyncio.Queue
-    )
+    incoming_queue: "asyncio.Queue[Union[str,bytes]]" = field(default_factory=asyncio.Queue)
+    outgoing_queue: "asyncio.Queue[Union[str,bytes]]" = field(default_factory=asyncio.Queue)
 
 
 class WebsocketServer(ez.Unit):
-
     """
     Receives arbitrary content from outside world
     and injects it into system in a DataArray
@@ -42,13 +34,9 @@ class WebsocketServer(ez.Unit):
 
     @ez.task
     async def start_server(self):
-        ez.logger.info(
-            f"Starting WS Input Server @ ws://{self.SETTINGS.host}:{self.SETTINGS.port}"
-        )
+        ez.logger.info(f"Starting WS Input Server @ ws://{self.SETTINGS.host}:{self.SETTINGS.port}")
 
-        async def connection(
-            websocket: websockets.server.WebSocketServerProtocol, path
-        ):
+        async def connection(websocket: websockets.server.WebSocketServerProtocol, path):
             async def loop(mode):
                 try:
                     if mode == "rx":
@@ -78,9 +66,7 @@ class WebsocketServer(ez.Unit):
             else:
                 ssl_context = None
 
-            server = await websockets.server.serve(
-                connection, self.SETTINGS.host, self.SETTINGS.port, ssl=ssl_context
-            )
+            server = await websockets.server.serve(connection, self.SETTINGS.host, self.SETTINGS.port, ssl=ssl_context)
 
             await server.wait_closed()
 
@@ -130,7 +116,7 @@ class WebsocketClient(ez.Unit):
             try:
                 websocket = await connect(uri)
                 break
-            except:
+            except Exception:
                 await asyncio.sleep(0.5)
 
         if websocket is None:
@@ -138,9 +124,7 @@ class WebsocketClient(ez.Unit):
 
         receive_task = asyncio.ensure_future(self.rx_from(websocket))
         transmit_task = asyncio.ensure_future(self.tx_to(websocket))
-        done, pending = await asyncio.wait(
-            [receive_task, transmit_task], return_when=asyncio.FIRST_COMPLETED
-        )
+        done, pending = await asyncio.wait([receive_task, transmit_task], return_when=asyncio.FIRST_COMPLETED)
 
         for task in pending:
             task.cancel()
