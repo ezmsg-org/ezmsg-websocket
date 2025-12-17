@@ -1,15 +1,15 @@
+import asyncio
 import json
 import math
 import time
-import asyncio
+from typing import Any, AsyncGenerator, Dict, Tuple
 
 import ezmsg.core as ez
 
-from ezmsg.websocket.units import WebsocketServer, WebsocketClient, WebsocketSettings
-
-from typing import Any, AsyncGenerator, Dict, Tuple
+from ezmsg.websocket.units import WebsocketClient, WebsocketServer, WebsocketSettings
 
 # LFO: Low Frequency Oscillator
+
 
 class LFOSettings(ez.Settings):
     freq: float = 0.2  # Hz, sinus frequency
@@ -17,7 +17,7 @@ class LFOSettings(ez.Settings):
 
 
 class LFO(ez.Unit):
-    SETTINGS: LFOSettings
+    SETTINGS = LFOSettings
 
     OUTPUT = ez.OutputStream(float)
 
@@ -64,7 +64,7 @@ class WebsocketSystemSettings(ez.Settings):
 
 
 class WebsocketSystem(ez.Collection):
-    SETTINGS: WebsocketSystemSettings
+    SETTINGS = WebsocketSystemSettings
 
     OSC = LFO()
     SERVER = WebsocketServer()
@@ -75,13 +75,9 @@ class WebsocketSystem(ez.Collection):
     def configure(self) -> None:
         self.OSC.apply_settings(LFOSettings(freq=0.2, update_rate=1.0))
 
-        self.SERVER.apply_settings(
-            WebsocketSettings(host=self.SETTINGS.host, port=self.SETTINGS.port)
-        )
+        self.SERVER.apply_settings(WebsocketSettings(host=self.SETTINGS.host, port=self.SETTINGS.port))
 
-        self.CLIENT.apply_settings(
-            WebsocketSettings(host=self.SETTINGS.host, port=self.SETTINGS.port)
-        )
+        self.CLIENT.apply_settings(WebsocketSettings(host=self.SETTINGS.host, port=self.SETTINGS.port))
 
     # Define Connections
     def network(self) -> ez.NetworkDefinition:
@@ -104,4 +100,4 @@ if __name__ == "__main__":
     # Run the websocket system
     system = WebsocketSystem()
     system.apply_settings(WebsocketSystemSettings(host=host, port=port))
-    ez.run(SYSTEM = system)
+    ez.run(SYSTEM=system)

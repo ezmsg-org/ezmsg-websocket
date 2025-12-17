@@ -1,29 +1,74 @@
-[tool.poetry]
+[project]
 name = "ezmsg-websocket"
-version = "1.1.2"
 description = "Websocket server and client units for ezmsg"
 authors = [
-  "Milsap, Griffin <griffin.milsap@gmail.com>",
-  "Peranich, Preston <pperanich@gmail.com>",
+  { name = "Griffin Milsap", email = "griffin.milsap@gmail.com" },
+  { name = "Preston Peranich", email = "pperanich@gmail.com" },
 ]
 license = "MIT"
 readme = "README.md"
-packages = [{ include = "ezmsg", from = "src" }]
-classifiers = [
-  "Programming Language :: Python :: 3",
-  "Operating System :: OS Independent",
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+  "ezmsg>=3.6.0",
+  "websockets>=8.1",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-ezmsg = "^3.3.0"
-websockets = "^8.1"
+[dependency-groups]
+dev = [
+  "pre-commit>=4.0.0",
+  {include-group = "lint"},
+  {include-group = "test"},
+]
+lint = [
+  "ruff",
+]
+test = [
+  "pytest>=8.0.0",
+  "pytest-cov",
+]
+docs = [
+  "sphinx>=8.0",
+  "pydata-sphinx-theme",
+  "sphinx-autodoc-typehints",
+  "sphinx-copybutton",
+  "myst-parser",
+]
 
-[tool.poetry.group.test.dependencies]
-pytest = "^7.0.0"
-pytest-cov = "*"
-flake8 = "*"
+# Uncomment if your package provides CLI commands
+# [project.scripts]
+# ezmsg-example = "ezmsg.example.main:main"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/ezmsg/websocket/__version__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ezmsg"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+# Exclude auto-generated files
+exclude = ["*/__version__.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["ezmsg.websocket"]
+known-third-party = ["ezmsg", "websockets"]
+
+[tool.uv.sources]
+# Uncomment to use development version of ezmsg from git
+#ezmsg = { git = "https://github.com/ezmsg-org/ezmsg.git", branch = "dev" }
