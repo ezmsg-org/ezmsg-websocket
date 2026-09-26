@@ -10,9 +10,15 @@ readme = "README.md"
 requires-python = ">=3.10"
 dynamic = ["version"]
 dependencies = [
-  "ezmsg>=3.6.0",
+  "ezmsg>=3.10.0b4",
   "websockets>=8.1",
 ]
+
+
+[project.entry-points."ezmsg.components"]
+"websocket.WebsocketClient" = "ezmsg.websocket.units:WebsocketClient"
+"websocket.WebsocketServer" = "ezmsg.websocket.units:WebsocketServer"
+
 
 [dependency-groups]
 dev = [
